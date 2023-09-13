@@ -442,8 +442,6 @@ network-troubleshoot-mygpu                     1/1     Running   0             4
 network-troubleshoot-timeweb-agent             1/1     Running   0             27m
 ```
 
-Описание каждого пода
-
 ```bash
 kubectl describe po network-troubleshoot-mygpu network-troubleshoot-timeweb-agent 
 ```
@@ -566,4 +564,48 @@ kubectl describe po network-troubleshoot-mygpu network-troubleshoot-timeweb-agen
     Normal  Started    29m   kubelet            Started container troubleshoot
   ```
 </details>
+
+Но при выполнении команды ping получаю следующее:
+
+```bash
+kubectl exec -it network-troubleshoot-timeweb-agent -- ping google.com
+```
+```console
+PING google.com (108.177.14.138): 56 data bytes
+64 bytes from 108.177.14.138: seq=0 ttl=111 time=4.824 ms
+64 bytes from 108.177.14.138: seq=1 ttl=111 time=4.532 ms
+64 bytes from 108.177.14.138: seq=2 ttl=111 time=4.477 ms
+64 bytes from 108.177.14.138: seq=3 ttl=111 time=4.485 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 4.477/4.579/4.824 ms
+```
+
+Все ок. Доступ есть.
+
+```bash
+kubectl exec -it network-troubleshoot-mygpu -- ping google.com
+```
+```console
+ping: bad address 'google.com'
+command terminated with exit code 1
+```
+
+Доступа нет.
+
+Я искал похожую проблему в интернете. [Can't reach internet from pod / container](https://github.com/k3s-io/k3s/issues/5349). Насколько мне хватило понимая, эта проблема связана с тем, что какие-то порты блокировались провайдером и если их открыть, все решалось.
+
+Мой network-troubleshoot-mygpu запущен у меня дома, как я думал таким провайдером может быть роутер.
+![image](https://github.com/dmitrymailk/k3s_pod_network_issue/assets/39678439/7437f891-22e2-4097-b371-44ef93047bd0)
+![image](https://github.com/dmitrymailk/k3s_pod_network_issue/assets/39678439/bfb2d26f-4ed6-496b-bc41-b4dd0c15f4ce)
+
+На `network-troubleshoot-mygpu` отключен firewall
+```bash
+sudo ufw disable
+```
+
+
+
+
 
