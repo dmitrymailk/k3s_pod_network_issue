@@ -1,6 +1,6 @@
 # k3s. Нет доступа к интернету из pod
 
-У меня имеется кластер из 1 master-node и 2 worker-node
+У меня имеется кластер из 1 master-node и 2 worker-node. 1 worker-node запущен у провайдера timeweb, другой у меня дома.
 ```bash
 kubectl get nodes
 ```
