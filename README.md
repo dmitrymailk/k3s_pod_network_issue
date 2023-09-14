@@ -605,7 +605,31 @@ command terminated with exit code 1
 sudo ufw disable
 ```
 
+**UPDATE v1**
+Оказалось что доступ в интернет на самом деле есть. Проблемы с DNS, потому как если набрать ip моего сервера и пингануть его, все будет ок. Обнаружил данную фичу я совершенно случайно через несколько дней безуспешных попыток :). Хотя стоит сказать что я поменял версию с `v1.27.5+k3s1` на `v1.25.13+k3s1`, но не думаю что это сильно повлияло, смена версии мне нужна была для корректной поддержки GPU
 
-
+```bash
+kubectl exec -it network-troubleshoot-mygpu -- ping 81.200.145.24
+```
+```console
+PING 81.200.145.24 (81.200.145.24) 56(84) bytes of data.
+64 bytes from 81.200.145.24: icmp_seq=1 ttl=54 time=40.7 ms
+64 bytes from 81.200.145.24: icmp_seq=2 ttl=54 time=40.3 ms
+64 bytes from 81.200.145.24: icmp_seq=3 ttl=54 time=40.1 ms
+64 bytes from 81.200.145.24: icmp_seq=4 ttl=54 time=40.1 ms
+64 bytes from 81.200.145.24: icmp_seq=5 ttl=54 time=40.0 ms
+^C
+--- 81.200.145.24 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4006ms
+rtt min/avg/max/mdev = 40.010/40.238/40.745/0.264 ms
+```
+Но если сделать тоже самое, например с `google.com`, то ничего работать не будет
+```bash
+kubectl exec -it network-troubleshoot-mygpu -- ping google.com
+```
+```console
+ping: google.com: Try again
+command terminated with exit code 2
+```
 
 
